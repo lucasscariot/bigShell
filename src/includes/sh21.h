@@ -6,7 +6,7 @@
 /*   By: splace <splace@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/06 12:49:52 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/08 19:10:17 by lscariot         ###   ########.fr       */
+/*   Updated: 2016/06/08 22:23:14 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,14 +201,10 @@ int						ft_history(t_gen *gen, char **tab);
 int						ft_alias(t_gen *gen, char **tab);
 int						ft_source(t_gen *gen, char **tab);
 int						ft_setalias(t_gen *gen, char **tab);
-char					**ft_env_new_env(t_gen *gen);
+char					**ft_env_new_env(t_env *env);
 char					**ft_env_new_tab(char **tab);
-int						ft_env_i(t_gen *gen, char **env, char **tab);
-char					**ft_count_env_i(char **tab);
-int						ft_env_deux(t_gen *gen, char **tab);
 char					*ft_com_ok(char *str, char *str2);
-int						ft_env_exec_un(pid_t f, char *str,
-		char **av, char **env);
+int						ft_exec_phase_one(t_gen *gen, char **tab, char **env);
 
 void					ft_exec(t_gen *gen);
 int						ft_execute(t_gen *gen, char **tab);
