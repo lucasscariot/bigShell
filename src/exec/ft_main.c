@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 13:45:43 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/06 14:09:15 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/08 22:22:46 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	ft_exec(t_gen *gen)
 	open_file(gen->cmd);
 	while (gen->cmd)
 	{
-		env = ft_env_new_env(gen);
+		env = ft_env_new_env(gen->env);
 		split = ft_exec_split(gen->cmd->cmd);
 		if (!split || !split[0])
 			;

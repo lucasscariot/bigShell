@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 14:06:29 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/08 19:10:14 by lscariot         ###   ########.fr       */
+/*   Updated: 2016/06/08 22:23:49 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ int		aff_env(t_env *env)
 		env = env->prev;
 	while (env)
 	{
-		debug(42);
 		ft_putstr(env->name);
 		ft_putstr(env->content);
 		ft_putchar('\n');
@@ -31,32 +30,32 @@ int		aff_env(t_env *env)
 	return (0);
 }
 
-char    **ft_env_new_env(t_gen *gen)
+char    **ft_env_new_env(t_env *env)
 {
 	char	**tab;
 	int		i;
 
-	while (gen->env->prev)
-		gen->env = gen->env->prev;
+	while (env->prev)
+		env = env->prev;
 	i = 0;
-	while (gen->env->next)
+	while (env->next)
 	{
 		i++;
-		if (gen->env->next == NULL)
+		if (env->next == NULL)
 			break ;
-		gen->env = gen->env->next;
+		env = env->next;
 	}
 	tab = (char **)malloc(sizeof(char *) * (i + 2));
-	while (gen->env->prev)
-		gen->env = gen->env->prev;
+	while (env->prev)
+		env = env->prev;
 	i = 0;
-	while (gen->env)
+	while (env)
 	{
-		tab[i] = ft_strjoin(gen->env->name, gen->env->content);
+		tab[i] = ft_strjoin(env->name, env->content);
 		i++;
-		if (gen->env->next == NULL)
+		if (env->next == NULL)
 			break ;
-		gen->env = gen->env->next;
+		env = env->next;
 	}
 	tab[i] = NULL;
 	return (tab);
@@ -66,16 +65,41 @@ t_env	*ft_cpy_env(t_env *env)
 {
 	t_env	*new;
 
+	if (env == NULL)
+		return (NULL);
 	while (env->prev)
 		env = env->prev;
-	while (env)
+	while (env->next)
 	{
 		new = ft_env_list(new, ft_delchar(ft_strdup(env->name),
-					ft_strlen(env->name) - 1), env->content);
-		if (env->next == NULL)
-			break ;
+					ft_strlen(env->name) - 1), ft_strdup(env->content));
 		env = env->next;
 	}
+	return (new);
+}
+
+char	**ft_is_exec_for_exec(char **tab, int i)
+{
+	int		j;
+	int		k;
+	char	**new;
+
+	j = i;
+	k = 0;
+	while (tab[i])
+	{
+		k++;
+		i++;
+	}
+	new = (char **)malloc(sizeof(char *) * (k + 1));
+	k = 0;
+	while (tab[j])
+	{
+		new[k] = tab[j];
+		k++;
+		j++;
+	}
+	new[k] = NULL;
 	return (new);
 }
 
@@ -109,18 +133,17 @@ int		ft_env(t_gen *gen, char **tab)
 			arg = 1;
 			break ;
 		}
-		debug(1);
 		split = ft_strsplit(tab[i], '=');
 		env = ft_env_list(env, split[0], split[1]);
-		debug(1);
+		ft_freetab(split);
 		i++;
 	}
-	debug(2);
-	if (arg == 0)
-		aff_env(env);
-	else
+	if (arg == 1)
 	{
-		return (1);
+		split = ft_is_exec_for_exec(tab, i);
+		ft_exec_phase_one(gen, split, ft_env_new_env(env));
 	}
+	else
+		aff_env(env);
 	return (0);
 }
