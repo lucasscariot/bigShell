@@ -6,11 +6,36 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/19 11:44:01 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/02 14:46:40 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/09 15:11:43 by lscariot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh21.h"
+
+int		ft_history_check(t_gen *gen)
+{
+	t_caps	*tmp;
+	char	*str;
+
+	tmp = gen->tcaps->prev;
+	str = ft_strchr(gen->tcaps->line, '!');
+	if (str)
+	{
+		str += 1;
+		while (tmp)
+		{
+			if (!ft_strncmp(str, tmp->line, ft_strlen(str)))
+			{
+				gen->tcaps = tmp;
+				ft_refresh(gen);
+				break ;
+			}
+			tmp = tmp->prev;
+		}
+		return (1);
+	}
+	return (0);
+}
 
 int		exec_enter_un(t_gen *gen)
 {
@@ -43,6 +68,8 @@ void	exec_enter(t_gen *gen, char *buf)
 
 	(void)buf;
 	ft_cpy_list(gen);
+	if (ft_history_check(gen))
+		return ;
 	check = exec_enter_un(gen);
 	i = ft_term_count_cursor(gen);
 	while (i < gen->tcaps->row && !check)
