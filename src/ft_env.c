@@ -6,7 +6,7 @@
 /*   By: lscariot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/23 09:23:49 by lscariot          #+#    #+#             */
-/*   Updated: 2016/06/08 21:47:35 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 18:51:42 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_env	*ft_env_list(t_env *env, char *name, char *content)
 		return (env);
 	new = (t_env*)malloc(sizeof(*new));
 	new->name = ft_strjoin(name, "=");
-	new->content = ft_strdup(content);
+	if (!(new->content = ft_strdup(content)))
+		new->content = ft_memalloc(sizeof(char));
 	new->next = NULL;
 	new->prev = NULL;
 	if (env == NULL)

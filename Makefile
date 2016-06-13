@@ -6,7 +6,7 @@
 #    By: lscariot <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/01/22 09:44:59 by lscariot          #+#    #+#              #
-#    Updated: 2016/06/04 16:32:57 by hfrely           ###   ########.fr        #
+#*   Updated: 2016/06/13 18:40:06 by jhezard          ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ RM		= rm -f
 all: 		$(NAME)
 
 $(NAME):
-	@make -C src
+	@make -C src -j8
 
 clean:
 	@make -C src clean
