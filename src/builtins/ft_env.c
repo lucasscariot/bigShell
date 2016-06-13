@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 14:06:29 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/08 22:23:49 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 10:27:35 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ char    **ft_env_new_env(t_env *env)
 	char	**tab;
 	int		i;
 
+	if (env == NULL)
+		return (NULL);
 	while (env->prev)
 		env = env->prev;
 	i = 0;
@@ -95,7 +97,7 @@ char	**ft_is_exec_for_exec(char **tab, int i)
 	k = 0;
 	while (tab[j])
 	{
-		new[k] = tab[j];
+		new[k] = ft_strdup(tab[j]);
 		k++;
 		j++;
 	}

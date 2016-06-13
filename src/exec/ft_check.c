@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 21:06:07 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/03 16:28:16 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 10:21:10 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,8 @@ int		check_builtins(char *str)
 	else if (ft_strcmp(str, "source") == 0)
 		return (1);
 	else
+	{
 		return (0);
+	}
 	return (1);
 }
