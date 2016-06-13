@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 14:06:29 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/13 10:27:35 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 20:40:18 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		aff_env(t_env *env)
 	return (0);
 }
 
-char    **ft_env_new_env(t_env *env)
+char	**ft_env_new_env(t_env *env)
 {
 	char	**tab;
 	int		i;
@@ -40,13 +40,8 @@ char    **ft_env_new_env(t_env *env)
 	while (env->prev)
 		env = env->prev;
 	i = 0;
-	while (env->next)
-	{
+	while (env->next && (env = env->next))
 		i++;
-		if (env->next == NULL)
-			break ;
-		env = env->next;
-	}
 	tab = (char **)malloc(sizeof(char *) * (i + 2));
 	while (env->prev)
 		env = env->prev;
@@ -110,42 +105,23 @@ int		ft_env(t_gen *gen, char **tab)
 	int		ac;
 	t_env	*env;
 	int		i;
-	int		arg;
 	char	**split;
 
 	i = 1;
-	arg = 0;
 	ac = ft_tablen(tab);
-	if (ac == 1)
-		return (aff_env(gen->env));
-	if (tab[i][0] == '-' && tab[i][1] == 'i')
-	{
-		i++;
-		arg = 1;
-	}
-	if (arg == 1)
+	if (ac > 1 && tab[i][0] == '-' && tab[i][1] == 'i' && i++)
 		env = NULL;
 	else
 		env = ft_cpy_env(gen->env);
-	arg = 0;
-	while (tab[i])
+	while (tab[i] && ft_strchr(tab[i], '='))
 	{
-		if (!ft_strchr(tab[i], '='))
-		{
-			arg = 1;
-			break ;
-		}
 		split = ft_strsplit(tab[i], '=');
 		env = ft_env_list(env, split[0], split[1]);
 		ft_freetab(split);
 		i++;
 	}
-	if (arg == 1)
-	{
-		split = ft_is_exec_for_exec(tab, i);
-		ft_exec_phase_one(gen, split, ft_env_new_env(env));
-	}
-	else
+	if (ft_exec_phase_one(gen, ft_is_exec_for_exec(tab, i), ft_env_new_env(env))
+		== -1)
 		aff_env(env);
 	return (0);
 }

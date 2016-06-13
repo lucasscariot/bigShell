@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/02 12:12:00 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/02 14:46:38 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 20:45:03 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,14 @@ char	*ft_splitchar_one(char *str, char *new, char c)
 	{
 		if (ch == '\0')
 		{
-			if (str[i] != c && str[i] != '\\' && str[i] != '\0')
-			{
-				new[j] = str[i];
+			if (str[i] != c && str[i] != '\\' && str[i] != '\0' &&
+					(new[j] = str[i]))
 				j++;
-			}
-			else if (str[i] != '\0')
-			{
-				new[j] = ' ';
+			else if (str[i] != '\0' && (new[j] = ' '))
 				j++;
-			}
 		}
-		else
-		{
-			new[j] = str[i];
+		else if ((new[j] = str[i]))
 			j++;
-		}
 		check_split_quote(&ch, str[i]);
 		i++;
 	}

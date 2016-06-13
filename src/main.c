@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 13:45:04 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/03 14:01:54 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 20:48:33 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@ void	sig_sigint(int sig)
 	}
 }
 
-void	handle_all_signals(void)
-{
-	signal(SIGTSTP, sig_sigquit);
-	signal(SIGINT, sig_sigint);
-}
-
 int		ft_check_line_empty(char *str)
 {
 	int		i;
@@ -56,7 +50,7 @@ int		ft_check_line_empty(char *str)
 char	*check_n(char *str)
 {
 	char	*line;
-	
+
 	line = ft_splitchar(str, '\n');
 	free(str);
 	return (line);
@@ -75,7 +69,6 @@ void	main_loop(t_gen gen, char *line)
 		line = check_n(line);
 		if (line[0] && ft_check_line_empty(line))
 		{
-
 			if (ft_cmd_source(line))
 			{
 				ft_source(&gen, NULL);
@@ -94,6 +87,8 @@ int		main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	signal(SIGTSTP, sig_sigquit);
+	signal(SIGINT, sig_sigint);
 	ft_can(&gen);
 	gen.env = ft_save_env(env);
 	ft_check_env(&gen);

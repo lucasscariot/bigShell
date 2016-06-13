@@ -6,7 +6,7 @@
 /*   By: splace <splace@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/06 12:49:52 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/09 15:12:14 by lscariot         ###   ########.fr       */
+/*   Updated: 2016/06/13 19:20:59 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ char					*ft_addchar_back(char *str, char fuck);
 int						check_builtins(char *str);
 int						check_exec(char *str);
 int						ft_redirection(t_gen *gen);
-char					*check_cmd_path(t_gen *gen, char **tab);
+char					*check_cmd_path(char **tab, char **env);
 int						set_redirection(t_gen *gen);
 int						ft_etou(t_gen *gen);
 int						set_aggr(t_gen *gen);

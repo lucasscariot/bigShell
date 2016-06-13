@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 13:45:43 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/13 10:23:36 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 20:29:46 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@ void	ft_setterm(t_gen *gen, int i)
 		tcsetattr(0, 0, &gen->term);
 }
 
-void	ft_not_found(t_gen *gen, char *str)
+int		ft_not_found(t_gen *gen, char *str)
 {
 	ft_putstr(SH);
 	ft_putstr(": command not found: ");
 	ft_putendl(str);
 	gen->status = 1;
+	return (1);
 }
 
 void	ft_exec_phase_three(t_gen *gen, char **tab, char **env)
@@ -88,21 +89,30 @@ void	exec_builtins(t_gen *gen, char **tab)
 
 int		ft_exec_phase_one(t_gen *gen, char **tab, char **env)
 {
-	if (check_builtins(tab[0]))
+	char	*tmp;
+
+	tmp = NULL;
+	if (tab && *tab)
 	{
-		exec_builtins(gen, tab);
-		return (0);
-	}
-	else if (tab[0] && (tab[0][0] == '.' || tab[0][0] == '/'))
-	{
-		if (check_exec(tab[0]))
+		if (check_builtins(tab[0]))
+		{
+			exec_builtins(gen, tab);
 			return (0);
+		}
+		else if (tab[0] && (tab[0][0] == '.' || tab[0][0] == '/'))
+		{
+			if (check_exec(tab[0]))
+				return (0);
+		}
+		else if ((tmp = check_cmd_path(tab, env)) == NULL)
+		{
+			return (ft_not_found(gen, tab[0]));
+		}
+		if (tmp)
+			tab[0] = tmp;
+		return (ft_exec_phase_two(gen, tab, env));
 	}
-	else if ((tab[0] = check_cmd_path(gen, tab)) == NULL)
-	{
-		return (1);
-	}
-	return (ft_exec_phase_two(gen, tab, env));
+	return (-1);
 }
 
 void	open_file(t_cmd *cmd)
@@ -166,8 +176,7 @@ void	ft_exec(t_gen *gen)
 				}
 				ft_check_file(gen, split);
 			}
-			else if (ft_exec_phase_one(gen, split, env))
-				ft_not_found(gen, tmp);
+			ft_exec_phase_one(gen, split, env);
 			free(tmp);
 			ft_etou(gen);
 		}

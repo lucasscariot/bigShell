@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/04 21:06:07 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/13 10:21:10 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 20:47:28 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	add_file(t_gen *gen, char **split)
 {
-	int     new_fd;
-	int     ret;
-	char    buff[1024];
+	int		new_fd;
+	int		ret;
+	char	buff[1024];
 
 	new_fd = open(split[0], O_RDWR | O_CREAT,
 			S_IRUSR | S_IRGRP | S_IWGRP | S_IWUSR);
@@ -40,11 +40,12 @@ void	input_file(t_gen *gen, int ipipe[2], char **split)
 void	ft_check_file(t_gen *gen, char **split)
 {
 	int		ipipe[2];
+
 	if (pipe(ipipe) == -1)
 		return ;
 	input_file(gen, ipipe, split);
 	if (gen->cmd->next)
-	gen->cmd->next->in = ipipe[0];
+		gen->cmd->next->in = ipipe[0];
 	if (close(ipipe[1]) == -1)
 		return ;
 	return ;
@@ -66,31 +67,6 @@ int		check_exec(char *str)
 		ft_putstr(": permission denied\n");
 	}
 	return (1);
-}
-
-char	*check_cmd_path(t_gen *gen, char **tab)
-{
-	char	*tmp;
-	char	**split;
-	int		i;
-	char	*tmp2;
-
-	if ((tmp = ft_getenv(gen, "PATH=")) == NULL)
-		return (NULL);
-	split = ft_strsplit(tmp, ':');
-	free(tmp);
-	i = 0;
-	while (split[i])
-	{
-		tmp2 = ft_strjoin(split[i], "/");
-		tmp = ft_strjoin(tmp2, tab[0]);
-		free(tmp2);
-		if (check_exec(tmp) == 0)
-			return (tmp);
-		free(tmp);
-		i++;
-	}
-	return (NULL);
 }
 
 int		check_builtins(char *str)

@@ -6,11 +6,40 @@
 /*   By: lscariot <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/05 17:47:11 by lscariot          #+#    #+#             */
-/*   Updated: 2016/05/17 12:36:19 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/13 20:46:31 by jhezard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sh21.h"
+
+char	*check_cmd_path(char **tab, char **env)
+{
+	char	*tmp;
+	char	**split;
+	int		i;
+	char	*tmp2;
+
+	i = 0;
+	while (env && *env && ft_strncmp(env[i], "PATH=", 5))
+		i++;
+	tmp = ft_strdup(env[i] + 5);
+	if (*tmp == '\0')
+		return (NULL);
+	split = ft_strsplit(tmp, ':');
+	free(tmp);
+	i = 0;
+	while (split[i])
+	{
+		tmp2 = ft_strjoin(split[i], "/");
+		tmp = ft_strjoin(tmp2, tab[0]);
+		free(tmp2);
+		if (check_exec(tmp) == 0)
+			return (tmp);
+		free(tmp);
+		i++;
+	}
+	return (NULL);
+}
 
 char	*ft_addchar_back(char *str, char fuck)
 {
