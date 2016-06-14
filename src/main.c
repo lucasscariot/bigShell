@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 13:45:04 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/13 20:48:33 by jhezard          ###   ########.fr       */
+/*   Updated: 2016/06/14 10:38:03 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	main_loop(t_gen gen, char *line)
 	{
 		gen.f = 0;
 		g_gen = &gen;
-		handle_all_signals();
 		ft_update_prompt(&gen);
 		ft_prompt(&gen);
 		ft_read_line(&line, &gen);

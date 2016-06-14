@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 13:45:43 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/13 20:29:46 by jhezard          ###   ########.fr       */
+/*   Updated: 2016/06/14 11:00:43 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,30 +89,21 @@ void	exec_builtins(t_gen *gen, char **tab)
 
 int		ft_exec_phase_one(t_gen *gen, char **tab, char **env)
 {
-	char	*tmp;
-
-	tmp = NULL;
-	if (tab && *tab)
-	{
 		if (check_builtins(tab[0]))
-		{
-			exec_builtins(gen, tab);
-			return (0);
-		}
-		else if (tab[0] && (tab[0][0] == '.' || tab[0][0] == '/'))
-		{
-			if (check_exec(tab[0]))
-				return (0);
-		}
-		else if ((tmp = check_cmd_path(tab, env)) == NULL)
-		{
-			return (ft_not_found(gen, tab[0]));
-		}
-		if (tmp)
-			tab[0] = tmp;
-		return (ft_exec_phase_two(gen, tab, env));
-	}
-	return (-1);
+				{
+							exec_builtins(gen, tab);
+									return (0);
+										}
+			else if (tab[0] && (tab[0][0] == '.' || tab[0][0] == '/'))
+					{
+								if (check_exec(tab[0]))
+												return (0);
+									}
+				else if ((tab[0] = check_cmd_path(tab, env)) == NULL)
+						{
+									return (1);
+										}
+					return (ft_exec_phase_two(gen, tab, env));
 }
 
 void	open_file(t_cmd *cmd)
@@ -176,7 +167,8 @@ void	ft_exec(t_gen *gen)
 				}
 				ft_check_file(gen, split);
 			}
-			ft_exec_phase_one(gen, split, env);
+			else if (ft_exec_phase_one(gen, split, env))
+				ft_not_found(gen, tmp);
 			free(tmp);
 			ft_etou(gen);
 		}
