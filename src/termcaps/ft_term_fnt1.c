@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_term_fnt1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lscariot <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lscariot <lscariot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/11 11:13:36 by lscariot          #+#    #+#             */
-/*   Updated: 2016/05/19 12:02:14 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/14 13:42:02 by lscariot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	exec_x_alt(t_gen *gen, char *buf)
 	if ((gen->tcaps->cut1 == -1 && gen->tcaps->cut2 == -1)
 			|| (gen->tcaps->cut1 == 0 && gen->tcaps->cut2 == 0)
 			|| (gen->tcaps->cut1 == gen->tcaps->len
-				&& gen->tcaps->cut2 == gen->tcaps->len))
+				&& gen->tcaps->cut2 == gen->tcaps->len)
+			|| (gen->tcaps->cut1 == 0 && gen->tcaps->cut2 == gen->tcaps->len))
 		return ;
 	ft_delstrsub(gen);
 	gen->tcaps->cut1 = -1;
