@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/06/03 13:45:43 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/14 11:00:43 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/14 11:52:37 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ void	exec_builtins(t_gen *gen, char **tab)
 	gen->f = 1;
 	g_gen = gen;
 	gen->status = ft_builtins(gen, tab);
-
 	dup2(save_in, 0);
 	dup2(save_out, 1);
 	close(save_in);
@@ -89,21 +88,27 @@ void	exec_builtins(t_gen *gen, char **tab)
 
 int		ft_exec_phase_one(t_gen *gen, char **tab, char **env)
 {
-		if (check_builtins(tab[0]))
-				{
-							exec_builtins(gen, tab);
-									return (0);
-										}
-			else if (tab[0] && (tab[0][0] == '.' || tab[0][0] == '/'))
-					{
-								if (check_exec(tab[0]))
-												return (0);
-									}
-				else if ((tab[0] = check_cmd_path(tab, env)) == NULL)
-						{
-									return (1);
-										}
-					return (ft_exec_phase_two(gen, tab, env));
+	char	*tmp;
+
+	tmp = NULL;
+	if (check_builtins(tab[0]))
+	{
+		exec_builtins(gen, tab);
+		return (0);
+	}
+	else if (tab[0] && (tab[0][0] == '.' || tab[0][0] == '/'))
+	{
+		if (check_exec(tab[0]))
+			return (0);
+	}
+	else if ((tmp = check_cmd_path(tab, env)) == NULL)
+	{
+		ft_not_found(gen, tab[0]);
+		return (1);
+	}
+	if (tmp)
+		tab[0] = tmp;
+	return (ft_exec_phase_two(gen, tab, env));
 }
 
 void	open_file(t_cmd *cmd)
@@ -132,11 +137,38 @@ void	open_file(t_cmd *cmd)
 	}
 }
 
+void	ft_exec_one(t_gen *gen, char **split, char **env)
+{
+	char	*tmp;
+
+	split = ft_check_alias(gen, split);
+	tmp = ft_strdup(split[0]);
+	if (gen->cmd->prev && (gen->cmd->prev->sym == 3 ||
+				gen->cmd->prev->sym == 4 || gen->cmd->prev->sym == 5
+				|| gen->cmd->prev->sym == 6))
+	{
+		if (gen->cmd->in != 1)
+		{
+			if (gen->cmd->prev && (gen->cmd->prev->sym == 3
+						|| gen->cmd->prev->sym == 4))
+			{
+				ft_freetab(split);
+				split = ft_strsplit(gen->cmd->cmd, ' ');
+				add_file(gen, split);
+			}
+		}
+		ft_check_file(gen, split);
+	}
+	else
+		ft_exec_phase_one(gen, split, env);
+	free(tmp);
+	ft_etou(gen);
+}
+
 void	ft_exec(t_gen *gen)
 {
 	char	**split;
 	char	**env;
-	char	*tmp;
 
 	if (!gen->cmd)
 		return ;
@@ -149,29 +181,7 @@ void	ft_exec(t_gen *gen)
 		if (!split || !split[0])
 			;
 		else
-		{
-			split = ft_check_alias(gen, split);
-			tmp = ft_strdup(split[0]);
-			if (gen->cmd->prev && (gen->cmd->prev->sym == 3 || gen->cmd->prev->sym
-						== 4 || gen->cmd->prev->sym == 5
-						|| gen->cmd->prev->sym == 6))
-			{
-				if (gen->cmd->in != 1)
-				{
-					if (gen->cmd->prev && (gen->cmd->prev->sym == 3 || gen->cmd->prev->sym == 4))
-					{
-						ft_freetab(split);
-						split = ft_strsplit(gen->cmd->cmd, ' ');
-						add_file(gen, split);
-					}
-				}
-				ft_check_file(gen, split);
-			}
-			else if (ft_exec_phase_one(gen, split, env))
-				ft_not_found(gen, tmp);
-			free(tmp);
-			ft_etou(gen);
-		}
+			ft_exec_one(gen, split, env);
 		ft_freetab(env);
 		gen->cmd = gen->cmd->next;
 	}
