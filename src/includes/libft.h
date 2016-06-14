@@ -6,7 +6,7 @@
 /*   By: lucas <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/08/04 01:54:04 by lucas             #+#    #+#             */
-/*   Updated: 2016/06/02 12:28:34 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/14 12:11:20 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ char			*ft_addchar(char *str, int c, char fuck);
 int				ft_tablen(char **tab);
 void			ft_freetab(char **tab);
 char			*ft_strreplace(char *src, char *new);
-char    *ft_splitchar(char *str, char c);
+char			*ft_splitchar(char *str, char c);
 
 #endif

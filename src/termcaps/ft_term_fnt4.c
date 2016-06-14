@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/19 11:44:01 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/09 15:11:43 by lscariot         ###   ########.fr       */
+/*   Updated: 2016/06/14 12:24:48 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,12 @@ int		exec_enter_un(t_gen *gen)
 	return (check);
 }
 
+void	exec_exec_write(t_gen *gen, char *buf)
+{
+	exec_write(gen, buf);
+	gen->tcaps->row++;
+}
+
 void	exec_enter(t_gen *gen, char *buf)
 {
 	int				i;
@@ -72,16 +78,10 @@ void	exec_enter(t_gen *gen, char *buf)
 		return ;
 	check = exec_enter_un(gen);
 	i = ft_term_count_cursor(gen);
-	while (i < gen->tcaps->row && !check)
-	{
+	while (i++ < gen->tcaps->row && !check)
 		ft_putstr_fd(tgetstr("kd", NULL), gen->fd);
-		i++;
-	}
-	if (check == 0)
-	{
-		if (check_redi_exec(gen, gen->tcaps->line))
-			check = 1;
-	}
+	if (check == 0 && check_redi_exec(gen, gen->tcaps->line))
+		check = 1;
 	ft_exec_quote('c', 1);
 	i = ft_strlen(gen->tcaps->line);
 	if (gen->tcaps->line[i - 1] == '\\')
@@ -92,10 +92,7 @@ void	exec_enter(t_gen *gen, char *buf)
 	else if (check == 0)
 		gen->stop = 0;
 	else
-	{
-		exec_write(gen, buf);
-		gen->tcaps->row++;
-	}
+		exec_exec_write(gen, buf);
 }
 
 void	exec_up(t_gen *gen, char *buf)
