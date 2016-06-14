@@ -6,7 +6,7 @@
 /*   By: hfrely <hfrely@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/03 14:06:29 by hfrely            #+#    #+#             */
-/*   Updated: 2016/06/14 12:04:57 by hfrely           ###   ########.fr       */
+/*   Updated: 2016/06/14 21:32:08 by hfrely           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,12 @@ t_env	*ft_cpy_env(t_env *env)
 		return (NULL);
 	while (env->prev)
 		env = env->prev;
-	while (env->next)
+	while (env)
 	{
 		new = ft_env_list(new, ft_delchar(ft_strdup(env->name),
 					ft_strlen(env->name) - 1), ft_strdup(env->content));
+		if (env->next == NULL)
+			break ;
 		env = env->next;
 	}
 	return (new);
@@ -109,19 +111,21 @@ int		ft_env(t_gen *gen, char **tab)
 
 	i = 1;
 	ac = ft_tablen(tab);
+	env = ft_cpy_env(gen->env);
 	if (ac > 1 && tab[i][0] == '-' && tab[i][1] == 'i' && i++)
-		env = NULL;
+		gen->env = NULL;
 	else
-		env = ft_cpy_env(gen->env);
+		gen->env = ft_cpy_env(gen->env);
 	while (tab[i] && ft_strchr(tab[i], '='))
 	{
 		split = ft_strsplit(tab[i], '=');
-		env = ft_env_list(env, split[0], split[1]);
+		gen->env = ft_env_list(gen->env, split[0], split[1]);
 		ft_freetab(split);
 		i++;
 	}
-	if (ft_exec_phase_one(gen, ft_is_exec_for_exec(tab, i), ft_env_new_env(env))
-		== -1)
-		aff_env(env);
+	if (ft_exec_phase_one(gen, ft_is_exec_for_exec(tab, i), ft_env_new_env(gen->env))
+			== -1)
+		aff_env(gen->env);
+	gen->env = ft_cpy_env(env);
 	return (0);
 }
